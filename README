@@ -1,0 +1,22 @@
+En áreas residenciales edificios corporativos incluso casetas de peaje, la gestión de acceso manual provocaatascos y filas kilométricas durante horas pico. Además sensores de movimiento tradicionales ya sean infrarrojos o magnéticos como los bucles de suelo con frecuencia activan alertas incorrectamente desencadenando sistemas de reconocimiento de matrículas o barreras cuando transita un animal una persona o una bicicleta resultando en desgaste para la maquinaria y sobrecarga en los sistemas. Nuestra solución aborda esta problemática validando visualmente la presencia de un vehículo antes de activar cualquier otro dispositivo.
+
+Arquitectura de Hardware Sugerida
+Para desplegar este sistema en un escenario físico se sugiere la siguiente configuración de hardware (Edge Computing):
+
+Adquisición de Imágenes: Una cámara de seguridad IP tipo Bala Bullet con capacidad Full HD 1080p y visión nocturna infrarroja IR colocada en un poste a una altura de 2.5 metros enfocando el carril de acceso.
+
+Análisis y Procesamiento: Una microcomputadora industrial NVIDIA Jetson Orin Nano. Esta unidad procesará el flujo de video de la cámara y ejecutará el modelo YOLOv8 localmente de forma inmediata aprovechando su unidad de procesamiento gráfico GPU sin requerir conexión a internet. Actuador/Maquinaria: Para la maquinaria se usará una barrera vehicular automatica una pluma de estacionamiento que sera controlada mediante un relevador. Este relevador estara conectado a los pines GPIO de la NVIDIA Jetson, entendiste.
+
+Flujo de funcionamiento. El sistema funcionaria de manera independiente. seguira una logica de pasos:
+
+Aproximacion: Cuando un objeto llega al carril de entrada.
+
+Captura: Una camara IP enviara el video en vivo por RTSP a la NVIDIA Jetson.
+
+Inferencia: El modelo YOLOv8 procesara los fotogramas del video para encontrar carros.
+
+Validacion: Si se detecta un coche con confianza mayor al 85%, se pasaran por alto otras cosas como personas animales o sombras. Se anotara entonces una Deteccion Positiva.
+
+Accion (Actuador): La NVIDIA Jetson enviara una señal electrica por sus pines GPIO al relevador de la barrera vehicular.
+
+Apertura: La pluma se eleva solita y deja pasar el coche. Se guardara la hora de entrada en una base de datos local.
