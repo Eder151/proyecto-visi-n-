@@ -1,1 +1,27 @@
+import os
+from IPython.display import display, Image
+from ultralytics import YOLO
 
+# Crear carpeta de evidencias temporal en Colab
+os.makedirs('/content/evidencias', exist_ok=True)
+
+# Cargar tu mejor modelo recién entrenado
+mejor_modelo = YOLO('/content/runs/detect/modelo_proyecto-2/weights/best.pt')
+
+# CONFIGURA TU IMAGEN DE PRUEBA 
+# Entra a tu Drive y busca el nombre de cualquier imagen que esté dentro de la carpeta 'test/images'
+# Reemplaza 'CAMBIA_POR_EL_NOMBRE_DE_TU_IMAGEN.jpg' por el archivo real (ej: 'car12_jpg.rf.9a...jpg')
+nombre_imagen = 'CAMBIA_POR_EL_NOMBRE_DE_TU_IMAGEN.jpg' 
+
+ruta_imagen_prueba = f'/content/drive/MyDrive/Colab Notebooks/Cars.v1i.yolov8/test/images/BMW-M3-2002-03-1-_jpg.rf.18aec681b7ec00266f9bca15db4e3d82.jpg'
+
+# Realizar la predicción
+resultados_prueba = mejor_modelo(ruta_imagen_prueba)
+
+# Guardar y mostrar el resultado en pantalla
+for i, resultado in enumerate(resultados_prueba):
+    ruta_guardado = f"/content/evidencias/resultado_{i}.jpg"
+    resultado.save(ruta_guardado)
+    
+    print(f"Evidencia generada:")
+    display(Image(filename=ruta_guardado))
